@@ -1,0 +1,45 @@
+﻿@model ProjectCrudMvc.Models.tblUser
+
+@{
+    ViewBag.Title = "Login";
+}
+
+<h2>User Login</h2>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <section class="banner_Header banner_Bg">
+        <div class="jumbotron">
+            <div class="row">
+                <div class="col-12">
+                    <div class="comment_response">
+                        <form action="#" method="post" class="contact_form">
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                                    <h3 class="text-center">Login</h3>
+
+                                    @Html.EditorFor(model => model.UserName, new { htmlAttributes = new { @class = "form-control", @placeholder = "User Name" } })
+                                    @Html.ValidationMessageFor(model => model.UserName, "", new { @class = "text-danger" })
+
+                                </div>
+                                <br /><br /><br /><br /><br />
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-12">
+                                    @Html.EditorFor(model => model.UserPassword, new { htmlAttributes = new { @class = "form-control", @placeholder = "Password" } })
+                                    @Html.ValidationMessageFor(model => model.UserPassword, "", new { @class = "text-danger" })
+                                </div>
+                            </div>                           
+                            <input type="submit" class="btn btn-primary" value="Login">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </section>
+
+}
+
+<div>
+    @Html.ActionLink("Go to Sign up", "Register")
+</div>

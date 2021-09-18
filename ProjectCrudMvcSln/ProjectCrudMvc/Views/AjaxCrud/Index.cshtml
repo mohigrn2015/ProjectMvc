@@ -1,0 +1,193 @@
+﻿@model ProjectCrudMvc.Models.ViewModels.ExtraPlayerCreate
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Player Information</h2>
+<script src="~/Scripts/jquery-1.12.1.js"></script>
+<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+@*<script src="https://code.jquery.com/jquery-1.9.0.min.js" integrity="sha256-f6DVw/U4x2+HjgEqw5BZf67Kq/5vudRZuRkljnbF344=" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha256-pasqAKBDmFT4eHoN2ndd6lN370kFiGUFyTiUHWhU7k8=" crossorigin="anonymous"></script>*@
+
+<script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+<script src="~/Scripts/bootstrap.min.js"></script>
+<div class="container" style="background-color:burlywood">
+    <a href="#" class="btn btn-primary" onclick="AddNewPlayer(0)">Add New Player</a>
+    <br />
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Team</th>
+                <th>Hired Team</th>
+                <th>Signin Money</th>                
+                <th>Action(Edit)</th>
+                <th>Action(Details)</th>
+                <th>Action(Delete)</th>
+            </tr>            
+        </thead>
+        <tbody id="setPlayerList">
+            <tr id="LoadingStatus" style="color:red"></tr>
+        </tbody>        
+    </table>
+    <div class="modal fade" id="myModal" style=" background-color: dimgrey">
+        <div class="modal-dialog">
+            <div class="modal-header">
+                <a href="#" class="close" data-dismiss="modal">&times;</a>
+                <h4 id="ModalTitle"></h4>
+            </div>
+            <div class="modal-body">
+                <form id="form" class="SubmitForm1">
+
+                    <fieldset id="SubmitForm" style="border:dashed">
+                        @Html.HiddenFor(p => p.ID, new { @id = "PlrId" })
+                        <div class="form-group">
+                            @Html.TextBoxFor(p => p.Name, new { @id = "plName", @class = "form-control", @placeholder = "Name" })
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBoxFor(p => p.Team, new { @id = "team", @class = "form-control", @placeholder = "Team" })
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBoxFor(p => p.HireInBPL, new { @id = "hiredTeam", @class = "form-control", @placeholder = "Hired Team" })
+                        </div>
+                        <div class="form-group">
+                            @Html.TextBoxFor(p => p.SigningMoney, new { @id = "signinMoney", @class = "form-control", @placeholder = "Signin Money" })
+                        </div>
+
+                        <div class="form-group">
+                            <input type="submit" value="Add Player" onclick="SavePlayer()" class="btn btn-default" />
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+            @Html.HiddenFor(p => p.ID, new { @id = "PlrId" })
+            <div class="modal fade" id="deleteConfirm">
+                <div class="modal-dialog">
+                    <div class="modal-header">
+                        <a href="#" class="close" data-dismiss="modal">&times;</a>
+                        <h4>Delete Player Record</h4>
+                    </div>
+                    <div class="modal-body">
+                        <h4>Are you sure to Delete this player?</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <a href="#" class="btn btn-danger" data-dismiss="modal" id="d">Cancel</a>
+                        <a href="#" class="btn btn-danger" onclick="ConfirmDelete()">Confirm Delete</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div id="partialDiv" style="display:none">
+    @Html.Partial("_PlayerList", Model)
+</div>
+
+<script>   
+    $("#LoadingStatus").html("Loading...");
+    $.get("/AjaxCrud/GetPlayerList", null, DataBind);
+    function DataBind(playerList) {
+        var playerList;
+        var SetData = $("#setPlayerList");
+        for (var i = 0; i < playerList.length; i++) {
+            var data = "<tr class='row_>" + playerList[i].PlayerId + "'>" +
+                "<td>" + playerList[i].ID + "</td>" +
+                "<td>" + playerList[i].Name + "</td>" +
+                "<td>" + playerList[i].Team + "</td>" +
+                "<td>" + playerList[i].HireInBPL + "</td>" +
+                "<td>" + playerList[i].SigningMoney + "</td>" +               
+                "<td>" + "<a href='#' class='btn btn-success' onclick='EditPlayer(" + playerList[i].ID + ")'> Edit</a>" + "</td>" +
+                "<td>" + "<a href='#' class='btn btn-primary' onclick='DetailsPlayer(" + playerList[i].ID + ")'> Details</a>" + "</td>" +
+                "<td>" + "<a href='#' class='btn btn-danger' onclick='DeletePlayer(" + playerList[i].ID + ")'> Delete </a>" + "</td>" +
+                "</tr>"
+            SetData.append(data);
+            $("#LoadingStatus").html("");
+        }
+    }
+    function AddNewPlayer(PlayerId) {
+        alert('Hi');
+        $("#form")[0].reset();
+        $("#PlrId").val(0);        
+        $("#ModalTitle").html("Add new player");
+        $("#myModal").modal();
+    }
+    function SavePlayer() {
+        alert('Calling Save Method');
+        var data = $(".SubmitForm1").serialize();  
+        $.ajax({
+            type: "POST",
+            url: "/AjaxCrud/SavePlayer/",
+            data:  data,
+            success: function (response) {
+                console.log(response);
+                alert("Succesfully Saved");
+                window.location.href = "/AjaxCrud/Index/";
+                $("#myModal").modal("Hide");
+            },
+            error: function () {
+                alert("Error Occured");
+                console.log('Error Ocered');
+            }
+        });
+        console.log('Error Ocered');
+    }
+   
+    function EditPlayer(PlayerID) {
+        var url = "/AjaxCrud/GetPlayersById?PlayerID=" + PlayerID;
+        $("#ModalTitle").html("Update player Record");
+        $("#myModal").modal();
+        $.ajax({
+            type: "GET",
+            url: url,
+            success: function (data) {
+                var obj = JSON.parse(data);
+                $("#PlrId").val(obj.ID);
+                $("#plName").val(obj.Name);
+                $("#team").val(obj.Team);
+                $("#hiredTeam").val(obj.HireInBPL);
+                $("#signinMoney").val(obj.SigningMoney);                
+            }
+        })
+    }
+    function DeletePlayer() {
+        $("#PlrId").val();
+        $("#deleteConfirm").modal("show");
+    }
+
+    function ConfirmDelete(Id) {        
+        var Id = $("#PlrId").val();
+        $.ajax({
+            type: "POST",
+            url: "/AjaxCrud/deleteRecord?Id=" + Id,
+            data: { },
+            success: function (result) {
+                $("#partialDiv").hide();
+                $("#myModal").modal("hide");
+                $(".row_" + Id).remove();
+            }
+        })
+
+    }
+    function DetailsPlayer(PlayerID) {
+        var plrId = PlayerID;
+        $.ajax({
+            url: "/AjaxCrud/GetplayerDetails?PlayerId=" + plrId,
+            type: "GET",
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                $("#partialDiv").show();
+                $("#partialDiv").html(data);
+            },
+            error: function () {
+                alert("Error Occured");
+            }
+        })
+    }
+</script>
+
+

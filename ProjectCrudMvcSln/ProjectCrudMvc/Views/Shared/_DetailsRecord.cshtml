@@ -1,0 +1,63 @@
+﻿@model ProjectCrudMvc.Models.ViewModels.PlayerListViewModel
+@{
+    ViewBag.Title = "Details";
+
+}
+
+<h2>Details</h2>
+<h3>Product Details Information</h3>
+<div>
+    <dl>
+        <dt>
+            @Html.DisplayNameFor(p => p.Name)
+        </dt>
+        <dd>
+            @Html.DisplayFor(p => p.Name);
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(p => p.DoB)
+        </dt>
+        <dd>
+            @Html.DisplayFor(p => p.DoB);
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(p => p.Team)
+        </dt>
+        <dd>
+            @Html.DisplayFor(p => p.Team);
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(p => p.Email)
+        </dt>
+        <dd>
+            @Html.DisplayFor(p => p.Email);
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(p => p.Phone)
+        </dt>
+        <dd>
+            @Html.DisplayFor(p => p.Phone);
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(p => p.Salary)
+        </dt>
+        <dd>
+            @Html.DisplayFor(p => p.Salary);
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(p => p.GradeName)
+        </dt>
+        <dd>
+            @Html.DisplayFor(p => p.GradeName);
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(p => p.ImageUrl);
+        </dt>
+        <dd>
+            <img src="@Url.Content(Model.ImageUrl)" width="75" height="80" />
+        </dd>
+    </dl>    
+    @Html.ActionLink("Back to List", "Index");
+</div>
+
+

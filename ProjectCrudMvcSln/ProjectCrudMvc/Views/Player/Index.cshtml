@@ -1,0 +1,83 @@
+﻿@model IEnumerable<ProjectCrudMvc.Models.ViewModels.PlayerListViewModel>
+
+@{
+    ViewBag.Title = "Index";
+
+}
+
+<link href="~/Content/bootstrap.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdn.datatables.net/1.10.13/css/jquery.dataTables.min.css" />
+<link href="~/Content/themes/base/jquery-ui.min.css" rel="stylesheet" />
+<br /><br /><br />
+<h2 style="font-family:Castellar; text-align:center; color:orangered;">Player Information</h2>
+
+<div style="width:90%; margin:0 auto; background-color:antiquewhite">
+    @Html.ActionLink("Create New Player", "Create", "Player", htmlAttributes: new { @class = "btn btn-primary", @role = "button" })
+    <br /><br />
+    <table class="table table-striped" id="myDataTable" style="background-color: lightsteelblue">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Date Of Birth</th>
+                <th>Team</th>
+                <th>Email</th>
+                <th>Phone</th>
+                <th>Salary</th>
+                <th>Grade</th>
+                <th>Image</th>
+                <th>Action</th>
+                <th>Action</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(p => item.PlayerID)</td>
+                    <td>@Html.DisplayFor(p => item.Name)</td>
+                    <td>@Convert.ToString(String.Format("{0:MM/dd/yyyy}", item.DoB))</td>
+                    <td>@Html.DisplayFor(p => item.Team)</td>
+                    <td>@Html.DisplayFor(p => item.Email)</td>
+                    <td>@Html.DisplayFor(p => item.Phone)</td>
+                    <td>@Html.DisplayFor(p => item.Salary)</td>
+                    <td>@Html.DisplayFor(p => item.GradeName)</td>
+                    <td><img src="@Url.Content(item.ImageUrl)" height="70" width="70" /></td>
+                    <td>@Html.ActionLink("Edit", "Edit", new { id = item.PlayerID }, htmlAttributes: new { @class = "btn btn-primary", @role = "button" })</td>
+                    <td>@Html.ActionLink("Delete", "Delete", new { id = item.PlayerID }, htmlAttributes: new { @class = "btn btn-danger", @role = "button" })</td>
+                    <td><a href="#" name="Details" onclick="DetailsRecord('+@item.PlayerID+')" class="btn btn-success">Details</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div id="partialDiv">
+
+    </div>
+</div>
+<script src="~/Scripts/jquery-3.0.0.min.js"></script>
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script src="~/Scripts/jquery.validate.min.js"></script>
+<script src="~/Scripts/jquery-ui-1.12.1.min.js"></script>
+
+<script>
+    function DetailsRecord(PlayerID) {
+        $.ajax({
+            url: "/Player/Details?PlayerID=" + PlayerID, // 1st- Controller, 2nd- Action, 3rd- Id
+            type: 'GET',
+            data: '',
+            contentType: 'application/json; charset=utf-8',
+            success: function (data) {
+                $('#partialDiv').show();
+                $('#partialDiv').html(data);
+            },
+            error: function () {
+                alert('Error Occured.');
+            }
+        })
+    }
+</script>
+<div>
+    @Html.ActionLink("Go to Grade", "GradeList","Grade")
+</div>
+

@@ -1,0 +1,33 @@
+﻿@model IEnumerable<ProjectCrudMvc.Models.Grade>
+@{
+    ViewBag.Title = "GradeList";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br />
+<br />
+
+
+<h2 style="text-align:center; color:darkred">GRADE LIST</h2>
+@Html.ActionLink("Add Grade", "AddGrade", "Grade", htmlAttributes: new { @class = "btn btn-info", @role = "button" })
+
+
+<div style="background-color:aquamarine">
+    <table class="table table-striped">
+        <tr>
+            <th>ID</th>
+            <th>Grade</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.GradeID</td>
+                <td>@item.GradeName</td>
+                <td>@Html.ActionLink("Edit", "EditGrade", new { id = item.GradeID }, htmlAttributes: new { @class = "btn btn-primary", @role = "button" })</td>
+                <td>@Html.ActionLink("Delete", "DeleteGrate", new { id = item.GradeID }, htmlAttributes: new { @class = "btn btn-danger", @role = "button" })</td>
+            </tr>
+        }
+    </table>
+</div>
+

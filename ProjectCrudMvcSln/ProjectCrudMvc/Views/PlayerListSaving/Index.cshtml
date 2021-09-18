@@ -1,0 +1,106 @@
+﻿@model IEnumerable<ProjectCrudMvc.Models.ExtraTableForPlayer>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br /><br /><br /><br />
+<table class="table table-striped" id="tblplayers">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Team</th>
+            <th>BplTeam</th>
+            <th>Signing Money</th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@item.Name</td>
+                <td>@item.Team</td>
+                <td>@item.HireInBPL</td>
+                <td>@item.SigningMoney</td>
+                <td><input type="button" value="Remove" onclick="Remove(this)" /></td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <tr>
+            <td><input type="text" id="txtName" /></td>
+            <td><input type="text" id="txtTeam" /></td>
+            <td><input type="text" id="txtBpl" /></td>
+            <td><input type="number" id="signingMoney" /></td>
+            <td><input type="button" id="btnAdd" value="Add" /></td>
+        </tr>
+    </tfoot>
+</table>
+<input type="button" id="btnSave" value="Save All" />
+<script src="~/Scripts/jquery-3.0.0.js"></script>
+<script src="~/Scripts/json2.js"></script>
+<script>
+    $("body").on("click", "#btnAdd", function () {
+        var txtName = $("#txtName");
+        var txtTeam = $("#txtTeam");
+        var txtBpl = $("#txtBpl");
+        var signingMoney = $("#signingMoney");
+        var tBody = $("#tblplayers> TBODY")[0];
+        var row = tBody.insertRow(-1);
+        var cell = $(row.insertCell(-1));
+        cell.html(txtName.val());
+        cell = $(row.insertCell(-1));
+        cell.html(txtTeam.val());
+        cell = $(row.insertCell(-1));
+        cell.html(txtBpl.val());
+        cell = $(row.insertCell(-1));
+        cell.html(signingMoney.val());
+        cell = $(row.insertCell(-1));
+        var btnRemove = $("<input/>");
+        btnRemove.attr("type", "button");
+        btnRemove.attr("onclick", "Remove(this);");
+        btnRemove.val("Remove");
+        cell.append(btnRemove);
+        txtName.val("");
+        txtTeam.val("");
+        txtBpl.val("");
+        signingMoney.val("");
+    });
+
+    function Remove(button) {
+        var row = $(button).closest("TR");
+        var name = $("TD", row).eq(0).html();
+        if (confirm("Do you want to Delete:" + name)) {
+            var table = $("#tblplayers")[0];
+            table.deleteRow(row[0].rowIndex);
+        }
+    }
+
+    $("body").on("click", "#btnSave", function () {
+        var playerLists = new Array();
+        $("#tblplayers TBODY TR").each(function () {
+            var row = $(this);
+            var playerList = {};
+            playerList.Name = row.find("TD").eq(0).html();
+            playerList.Team = row.find("TD").eq(1).html();
+            playerList.HireInBPL = row.find("TD").eq(2).html();
+            playerList.SigningMoney = row.find("TD").eq(3).html();
+            playerLists.push(playerList);
+        })
+        $.ajax({
+            type: "POST",
+            url: "/PlayerListSaving/insertPlayerList",
+            data: JSON.stringify(playerLists),
+            contentType: "application/json; charset=utf-8",
+            dataType: "Json",
+            success: function (result) {
+                alert(result + "record(s) inserted");
+                $('#tblplayers').hide();
+                window.location.href = "/PlayerListSaving/List";
+            }
+        });
+
+    });
+
+</script>

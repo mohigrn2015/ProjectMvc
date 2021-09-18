@@ -1,0 +1,38 @@
+﻿@model IEnumerable<ProjectCrudMvc.Models.ExtraTableForPlayer>
+@{
+    ViewBag.Title = "List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br />
+<br />
+<br />
+<br />
+<table class="table table-striped" id="tblplayers">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Team</th>
+            <th>BplTeam</th>
+            <th>Signing Money</th>  
+            <th>Edit</th>
+            <th>Delete</th>          
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+        <tr>
+            <td>@item.Name</td>
+            <td>@item.Team</td>
+            <td>@item.HireInBPL</td>
+            <td>@item.SigningMoney</td>    
+
+            <td>@Html.ActionLink("Edit", "Edit", new { id = item.ID })</td>
+            <td>@Html.ActionLink("Delete", "Delete", new { id = item.ID })</td>
+
+        </tr>
+        }
+    </tbody>
+   
+</table>
+
